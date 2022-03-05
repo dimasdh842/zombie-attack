@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Zombie Attcaking me Help !!!</title>
+    <style>
+
+        #canvas{
+            border: 1px solid black;
+        }
+
+        #scoreBar{
+            /* float: right; */
+            position: absolute;
+            top:100px;
+            right: 100px;
+        }
+
+        #pindahLevel{
+            display: none;
+            width: 800px;
+            height: 600px;
+            position: absolute;
+            background:rgba(0, 0, 0, 0.875);
+            top:10px;
+            text-align: center;
+        }
+
+        .title{
+            padding-top: 100px;
+            color:white;
+        }
+
+        .tmbl{
+            background: white ;
+            color: black;
+            text-decoration: none;
+            font-size: 15px;
+            padding:12px 20px ;
+            border:none;
+            border-radius: 20px;
+        }
+
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="800" height="600">
+        your bworser not support this future 
+    </canvas>
+
+    <div id="scoreBar">
+
+        <h1>Score</h1>
+        <p>your score : <span id="score">0</span></p>      
+    </div>
+
+    <div id="pindahLevel">
+        <h1 class="title">Selmat anda Behasil..</h1>
+        <button class="tmbl"> 
+            Lanjut.. 
+        </button>
+    </div>
+<script>
+        var cvs = document.getElementById('canvas');
+        var ctx = cvs.getContext('2d');
+        var scoreBar = document.getElementById('score');
+        var tmbl = document.querySelector('.tmbl');
+        var pindahLevelbar = document.querySelector('#pindahLevel');
+        var score = 0;
+        var widthImg = 350;
+        var heightImg = 211;
+        var cols = 4;
+        var rows = 2;
+        var sheetX = widthImg / cols; 
+        var sheetY = heightImg / rows;
+        var srcX = 0;
+        var srcY = 0;
+        var currentFrame = 4;
+        var right = false;
+        var left = false;
+
+
+
+        // zombie 2
+        var cols2 = 3;
+        var rows2 = 2;
+        var sheetX2 = widthImg / cols2; 
+        var sheetY2 = heightImg / rows2;
+        var srcX = 0;
+        var currentFrame2 = 3;
+        var banyakBall = 0;
+        var banyak = 5;
+
+        // hero
+
+        var widthHero = 816;
+        var heightHero = 211;
+        var colsHero = 6;
+        var rowsHero = 1;
+        var currentFrameHero = 0;
+        var srcXHero = 0;
+        var srcYHero = 0;
+        var sheetXHero = widthHero/colsHero;
+        var sheetYHero = heightHero/rowsHero;
+
+        // levelng
+
+        var main = true;
+        var pindahLevel = false;
+
+
+        var bgImg = new Image();
+        bgImg.src = 'img/bg.png';
+        
+        var playerImg = new Image();
+        playerImg.src = 'img/spriteZombiev2.png';
+        
+        var player2Img = new Image();
+        player2Img.src = 'img/FemaleZombie.png';
+        
+        var heroImg = new Image();
+        heroImg.src = 'img/hero1.png';
+
+        const bg = {
+            x : 0,
+            y : 0,
+        }
+
+        const hero = {
+            x : 10,
+            y : 455,
+        }
+
+        // event listener
+
+        document.addEventListener('keydown',function(e) {
+
+            if (e.keyCode == 37 ) {
+                left = true;
+            }
+            if (e.keyCode == 39 ) {
+                right = true;
+            }
+            if (e.keyCode == 32) {
+                banyakBall++;
+                ball.push(
+                    [
+                    hero.x + 50,
+                    hero.y + 50,
+                    true,
+                    ]
+                );
+                // createFireBall();
+            }
+        });
+        
+        document.addEventListener('keyup',function(e) {
+
+            if (e.keyCode == 37 ) {
+                left = false;
+            }
+            if (e.keyCode == 39 ) {
+                right = false;
+            }
+        });
+
+        tmbl.addEventListener('click',function(){
+            main = true;
+            pindahLevel = false;
+            pindahLevelbar.style.display = 'none';
+            
+        });
+
+        function drawBg() {
+            ctx.drawImage(bgImg,bg.x,bg.y);
+        }
+        var zombie = [];
+        function createZombie() {
+            for (let a = 0 ; a < banyak ; a++ ) {
+                zombie [a] = [
+                    800 + Math.ceil(Math.random() * 300 ) ,
+                    455,
+                    3,
+                ];
+            }
+
+            // console.log(zombie);
+        }
+
+        createZombie();
+        
+        var zombie2 = [];
+        
+        function createZombie2() {
+            for (let a = 0 ; a < banyak ; a++ ) {
+                zombie2 [a] = [
+                    900 + Math.ceil(Math.random() * 500 ) ,
+                    455,
+                    3,
+                ];
+            }
+
+            console.log(zombie2);
+        }
+
+        createZombie2();
+
+        function createUpdate() {
+            currentFrame = ++currentFrame % 4;
+            srcX = currentFrame * sheetX;
+            srcY = 0;
+        }
+        function createUpdate2() {
+            currentFrame = ++currentFrame % 3;
+            srcX = currentFrame * (350/3) + 20;
+            srcY = 0;
+        }
+        // hero
+        
+            var a= 400  ;
+        function updatePlayerHero() {
+            
+        }
+
+        function updatePlayer() {
+            createUpdate();
+            zombie.forEach(e => {
+                ctx.drawImage(playerImg,srcX,srcY,sheetX,sheetY,e[0] -= 3,e[1],sheetX,sheetY);
+            // console.log(e);
+            })
+        }
+            var b= 500  ;
+        function updatePlayer2() {
+            createUpdate2();
+            zombie2.forEach(e => {
+
+                ctx.drawImage(player2Img,srcX,srcY,sheetX2,sheetY2,e[0] -= 3,455,sheetX2,sheetY2);
+            });
+            // console.log();
+        }
+
+        function createBar() {
+            zombie.forEach((e,i) => {
+            var health = e[2];
+            var x = e[0];
+            var y = Math.round(Math.random() * 10);
+            
+            ctx.fillStyle = 'red';
+            ctx.fillRect(x-=3,430+y,10*health,10);
+            });
+
+            zombie2.forEach((e,i) => {
+            var health = e[2];
+            var x = e[0];
+            var y = Math.round(Math.random() * 10);
+                ctx.fillStyle = 'pink';
+                ctx.fillRect(x-=3,430 + y,10*health,10);
+            });
+        }
+
+        var ball = [];
+        // function createFireBall() {
+
+
+        //     for ( let a = 0; a < banyakBall;a++) {
+        //         ball[a] = [
+        //             hero.x + 50 ,
+        //             hero.y + 50  ,
+        //             true,
+        //         ];
+        //     }
+        //     console.log(ball);  
+
+        //     // ctx.fillRect(hero.x + 50 ,hero.y + 50,20,20); 
+        // }
+
+        // createFireBall();
+        function drawFireBall() {
+            ball.forEach(e => {
+                if (e[2]) {
+
+                    ctx.fillStyle = "orange";
+                    ctx.fillRect(e[0]+= 5,e[1],20,20);
+                }
+            })
+        }
+
+        function heroZombieCollision() {
+            zombie.forEach(e=>{
+                if (e[0] + 50 <= hero.x +80 ) {
+                    alert('mati');
+                }
+            }); 
+            
+            zombie2.forEach(e=>{
+                if (e[0] + 50 <= hero.x +80) {
+                    alert('mati');
+                }
+            });
+        } 
+
+        function isLevelDone() {
+            if (zombie.length == 0 && zombie2.length == 0 ){
+                // pindahLevel = true;
+                // pindahLevelbar.style.display = 'block';
+                banyak = 10;
+                banyak+=2;
+                createZombie();
+                createZombie2();
+                updatePlayer();
+                updatePlayer2();
+            }
+        }
+
+        function ballZombieCollision() {
+
+            ball.forEach((e,b) => {
+                zombie.forEach( (a,i) => {
+                    if (e[0]  >= a[0] - 20){
+                        a[2] -= 1;
+                        ball.splice(b,1);
+                        if (a[2] == 0 ){
+
+                            zombie.splice(i,1);
+                            score++;
+                        } 
+                        // alert('zombie' + i +'matii');
+                    }
+                });
+
+                zombie2.forEach( (a,i) => {
+                    if (e[0] >= a[0] - 20){
+                        // alert('zombie' + i +'matii');
+                        a[2] -= 1;
+                        ball.splice(b,1);
+                        if (a[2] == 0 ){
+                            zombie2.splice(i,1);
+                            score++;
+                        } 
+                    }
+                });
+            });
+        }
+        function drawScore(){
+            scoreBar.innerHTML = score;
+        }
+        // craete Player 
+
+        function drawPlayer() {
+            ctx.drawImage(heroImg,hero.x,hero.y,80,100);
+        }
+
+        function movePlayer() {
+            
+            if (left && hero.x > 0) {
+                hero.x -=10 ; 
+            }
+            if (right && hero.x + 80 < cvs.width) {
+                hero.x += 10; 
+            }
+        }
+
+
+
+
+            setInterval(function() {
+            ctx.clearRect(0,0,800,600);
+                drawScore();
+                drawBg();
+                drawPlayer();
+                if (main) {
+                isLevelDone();
+                drawFireBall();
+                updatePlayer();
+                updatePlayer2();
+                movePlayer();
+                updatePlayerHero();
+                heroZombieCollision();
+                ballZombieCollision();
+                createBar();
+            }
+            },100)
+        
+    </script>
+</body>
+</html>    
